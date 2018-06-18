@@ -1,0 +1,24 @@
+{
+    "manifest_version": 2,
+    "name": "Tabi",
+    "author": "Przemyslaw Malirz",
+    "version": "1.0",
+    "description": "Tabi - The Wall for Teams - Firefox Addon",
+    "icons": {
+        "48": "icons/tabi48.png",
+        "96": "icons/tabi96.png"
+    },
+    "browser_action": {
+        "default_icon": "icons/tabi48.png",
+        "default_title": "Tabi",
+        "default_popup": "config-page.html"
+    },
+    "permissions": [
+        "tabs", "storage"
+    ],
+    "background": {
+        "scripts": [
+            "background-bundle.js"
+        ]
+    }
+}
