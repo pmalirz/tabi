@@ -42,7 +42,7 @@ class ConfigBox extends Component {
 
   applyChanges = (event) => {
     // validate config
-    alert(this.state);
+    
 
     // save config
     let savedConfigModel = this.saveConfig(); 
@@ -54,7 +54,7 @@ class ConfigBox extends Component {
   /** Loads the Tabi config (state) on the config popup. */
   loadConfig = () => {
     configRepository.loadOrDefault((loadedConfig) => {
-      this.setState({activated: loadedConfig.activated, tabConfig: TabConfig.toString(this.loadConfig.tabConfig) });
+      this.setState({activated: loadedConfig.activated, tabConfig: TabConfig.toString(loadedConfig.tabConfig) });
 
       console.log('Loaded config: ' + JSON.stringify(this.state));
     });
@@ -74,7 +74,7 @@ class ConfigBox extends Component {
   broadcastConfig = (configModel) => {
     browser.runtime.sendMessage(
       { type: "tabi-config-changed", config: configModel.toJSON() }
-    );
+    );    
   }
 
   render() {
