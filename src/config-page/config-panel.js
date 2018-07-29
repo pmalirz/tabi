@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 
-import Immutable from 'immutable';
+import { configRepository } from '../model/config-repository';
+import { ConfigModel, TabConfig } from '../model/config-model';
 
 import Form from 'grommet/components/Form';
 import FormFields from 'grommet/components/FormFields';
@@ -23,71 +24,44 @@ class ConfigBox extends Component {
   constructor(props) {
     super(props);
     this.state = { model: new ConfigModel() };
-
   }
 
   activatedHandler = (event) => {
-
     console.log('activatedHandler: ' + event.target.checked);
 
-    this.setState({model: this.state.model.set('activated', event.target.checked)}, 
-                  () => {this.saveConfig(); this.broadcastConfig()});
+    this.state.model.activated = event.target.checked;
+
+    this.setState({model: this.state.model }, () => {this.saveConfig(); this.broadcastConfig()});
   }
 
   configHandler = (event) => {
-
     console.log('configHandler: ' + event.target.value);
 
-    this.setState({
-      model: this.state.model.set('config', event.target.value)
-    });
+    this.state.model.tabConfig = TabConfig.fromString(event.target.value);
+
+    this.setState({ model: this.state.model });
     
   }
 
   /** Loads the Tabi config (state) on the config popup. */
   loadConfig = () => {    
-    browser.storage.local.get('tabiconfig').then((item) => {
+    configRepository.loadOrDefault((loadedConfig) => {
+      this.setState({ model: loadedConfig }); 
 
-      if (!item || !item.tabiconfig) {
-        this.setState({ model: new ConfigModel() });
-        return;
-      }
-
-      this.setState({ model: new ConfigModel(item.tabiconfig) });            
+      console.log('Loaded config: ' + JSON.stringify(this.state.model.toJSON()));
     });
   }
 
   /** Stores the Tabi config (state). */
   saveConfig = () => {
-    let contentToStore = {};
-    contentToStore['tabiconfig'] = {activated: this.state.model.activated, config: this.state.model.config};
-    browser.storage.local.set(contentToStore);
-    console.log('Saved config: ' + JSON.stringify(contentToStore));
-  }
+    configRepository.save(this.state.model);
 
-  // when r or 1 is set then returns true, otherwise return false.
-  isReload = (strValue) => {
-    return strValue.match(/[r1]{1}/i);
+    console.log('Saved config: ' + JSON.stringify(this.state.model.toJSON()));
   }
 
   broadcastConfig = () => {
-
-    console.log('broadcastConfig: ' + this.state);
-
-    // here we get array of config lines
-    let parsedConfigLines = this.state.model.get('config').trim().split("\n");
-
-    let configArray = [];
-
-    parsedConfigLines.forEach(line => {
-      let lineElements = line.split(',');
-      let forceReload = lineElements.length > 1 ? this.isReload(lineElements[1]) : false;
-      configArray.push({ timeout: lineElements[0], reload: forceReload });
-    });
-
-
     browser.runtime.sendMessage(
-      { type: "tabi-activation", activated: this.state.model.activated, configArray: configArray }
+      { type: "tabi-config-changed", config: this.state.model.toJSON() }
     );
   }
 
@@ -104,7 +78,7 @@ class ConfigBox extends Component {
                 <CheckBox name="activated" label="Activate Tabi" checked={this.state.model.activated} onChange={this.activatedHandler} />
               </FormField>
               <FormField>
-                <textarea rows="5" type="text" name="config" placeholder="2000,r" value={this.state.model.config} onChange={this.configHandler} />
+                <textarea rows="5" type="text" name="config" placeholder="2000,r" value={TabConfig.toString(this.state.model.tabConfig)} onChange={this.configHandler} />
               </FormField>
             </FormFields>
           </Form>
@@ -118,12 +92,6 @@ class ConfigBox extends Component {
   }
 
 }
-
-/**
- * ConfigBox Model.
- */
-var ConfigModel = Immutable.Record({ activated: false, config: '' });
-
 
 /****************************************************************************************************************
  *  Export Section
