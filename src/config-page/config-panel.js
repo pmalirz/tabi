@@ -10,8 +10,6 @@ import CheckBox from 'grommet/components/CheckBox';
 import Header from 'grommet/components/Header';
 import Box from 'grommet/components/Box';
 import Title from 'grommet/components/Title';
-import Button from 'grommet/components/Button';
-import Checkmark from 'grommet/components/icons/base/Checkmark';
 
 class ConfigPanel extends Component {
   render() {
@@ -31,7 +29,7 @@ class ConfigBox extends Component {
   activatedHandler = (event) => {
     console.log('activatedHandler: ' + event.target.checked);
     let newState = { activated: event.target.checked };
-    this.setState(_.merge(this.state, newState));
+    this.setState(_.merge(this.state, newState), () => this.applyChanges());
   }
 
   tabConfigHandler = (event) => {
@@ -91,11 +89,6 @@ class ConfigBox extends Component {
               </FormField>
               <FormField>
                 <textarea rows="5" type="text" name="config" placeholder="2000,r" value={this.state.tabConfig} onChange={this.tabConfigHandler} />
-              </FormField>
-              <FormField justify="center">
-                <Box>
-                  <Button label="Apply" icon={<Checkmark />} primary={true} onClick={this.applyChanges} />
-                </Box>
               </FormField>
             </FormFields>
           </Form>
