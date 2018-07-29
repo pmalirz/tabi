@@ -10,6 +10,8 @@ import CheckBox from 'grommet/components/CheckBox';
 import Header from 'grommet/components/Header';
 import Box from 'grommet/components/Box';
 import Title from 'grommet/components/Title';
+import Button from 'grommet/components/Button';
+import Checkmark from 'grommet/components/icons/base/Checkmark';
 
 class ConfigPanel extends Component {
   render() {
@@ -23,45 +25,55 @@ class ConfigBox extends Component {
 
   constructor(props) {
     super(props);
-    this.state = { model: new ConfigModel() };
+    this.state = { activated: false, tabConfig: '' };
   }
 
   activatedHandler = (event) => {
     console.log('activatedHandler: ' + event.target.checked);
-
-    this.state.model.activated = event.target.checked;
-
-    this.setState({model: this.state.model }, () => {this.saveConfig(); this.broadcastConfig()});
+    let newState = { activated: event.target.checked };
+    this.setState(_.merge(this.state, newState));
   }
 
-  configHandler = (event) => {
+  tabConfigHandler = (event) => {
     console.log('configHandler: ' + event.target.value);
+    let newState = { tabConfig: event.target.value };
+    this.setState(_.merge(this.state, newState));
+  }
 
-    this.state.model.tabConfig = TabConfig.fromString(event.target.value);
+  applyChanges = (event) => {
+    // validate config
+    alert(this.state);
 
-    this.setState({ model: this.state.model });
-    
+    // save config
+    let savedConfigModel = this.saveConfig(); 
+
+    // broadcast changes
+    this.broadcastConfig(savedConfigModel);
   }
 
   /** Loads the Tabi config (state) on the config popup. */
-  loadConfig = () => {    
+  loadConfig = () => {
     configRepository.loadOrDefault((loadedConfig) => {
-      this.setState({ model: loadedConfig }); 
+      this.setState({activated: loadedConfig.activated, tabConfig: TabConfig.toString(this.loadConfig.tabConfig) });
 
-      console.log('Loaded config: ' + JSON.stringify(this.state.model.toJSON()));
+      console.log('Loaded config: ' + JSON.stringify(this.state));
     });
   }
 
   /** Stores the Tabi config (state). */
   saveConfig = () => {
-    configRepository.save(this.state.model);
+    let configModel = new ConfigModel(this.state.activated, TabConfig.fromString(this.state.tabConfig));
 
-    console.log('Saved config: ' + JSON.stringify(this.state.model.toJSON()));
+    configRepository.save(configModel);
+
+    console.log('Saved config: ' + JSON.stringify(this.state));
+
+    return configModel;
   }
 
-  broadcastConfig = () => {
+  broadcastConfig = (configModel) => {
     browser.runtime.sendMessage(
-      { type: "tabi-config-changed", config: this.state.model.toJSON() }
+      { type: "tabi-config-changed", config: configModel.toJSON() }
     );
   }
 
@@ -75,10 +87,15 @@ class ConfigBox extends Component {
             </Header>
             <FormFields>
               <FormField htmlFor="activated">
-                <CheckBox name="activated" label="Activate Tabi" checked={this.state.model.activated} onChange={this.activatedHandler} />
+                <CheckBox name="activated" label="Activate Tabi" checked={this.state.activated} onChange={this.activatedHandler} />
               </FormField>
               <FormField>
-                <textarea rows="5" type="text" name="config" placeholder="2000,r" value={TabConfig.toString(this.state.model.tabConfig)} onChange={this.configHandler} />
+                <textarea rows="5" type="text" name="config" placeholder="2000,r" value={this.state.tabConfig} onChange={this.tabConfigHandler} />
+              </FormField>
+              <FormField justify="center">
+                <Box>
+                  <Button label="Apply" icon={<Checkmark />} primary={true} onClick={this.applyChanges} />
+                </Box>
               </FormField>
             </FormFields>
           </Form>

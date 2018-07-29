@@ -114,9 +114,9 @@
 
         console.log('background onMessage: ' + message);
 
-        if (message.type === "tabi-activation") {
-            if (message.activated) {
-                enableTabi(message.configArray);
+        if (message.type === "tabi-config-changed") {
+            if (message.config.activated) {
+                enableTabi(message.config.tabConfig);
             } else {
                 disableTabi();
             }
