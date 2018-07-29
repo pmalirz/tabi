@@ -10,6 +10,7 @@ import CheckBox from 'grommet/components/CheckBox';
 import Header from 'grommet/components/Header';
 import Box from 'grommet/components/Box';
 import Title from 'grommet/components/Title';
+import Toast from 'grommet/components/Toast';
 
 class ConfigPanel extends Component {
   render() {
@@ -23,12 +24,23 @@ class ConfigBox extends Component {
 
   constructor(props) {
     super(props);
+
+    this.infoOnActivation = false;
+
     this.state = { activated: false, tabConfig: '' };
   }
 
   activatedHandler = (event) => {
     console.log('activatedHandler: ' + event.target.checked);
-    let newState = { activated: event.target.checked };
+
+    let activated = event.target.checked;
+
+    if(activated) {
+      // TODO: validate befor enable the component...
+      this.infoOnActivation = true;
+    }
+
+    let newState = { activated: activated };
     this.setState(_.merge(this.state, newState), () => this.applyChanges());
   }
 
@@ -76,6 +88,11 @@ class ConfigBox extends Component {
   }
 
   render() {
+
+    const activatedToast = this.infoOnActivation ? <Toast status="ok">Tabi is active now!</Toast> : '';
+
+    this.infoOnActivation = false;
+
     return (
       <Box direction="row" justify="center">
         <Box id="register-box" colorIndex="light-2" pad="medium" primary={true} size="medium">
@@ -93,6 +110,7 @@ class ConfigBox extends Component {
             </FormFields>
           </Form>
         </Box>
+        {activatedToast}        
       </Box>
     );
   }
