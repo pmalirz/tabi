@@ -11,6 +11,7 @@ import Header from 'grommet/components/Header';
 import Box from 'grommet/components/Box';
 import Title from 'grommet/components/Title';
 import Toast from 'grommet/components/Toast';
+import Image from 'grommet/components/Image';
 
 class ConfigPanel extends Component {
   render() {
@@ -93,12 +94,14 @@ class ConfigBox extends Component {
 
     this.infoOnActivation = false;
 
+    const textureURL = browser.extension.getURL("icons/tabi48.png");
+
     return (
       <Box direction="row" justify="center">
         <Box id="register-box" colorIndex="light-2" pad="medium" primary={true} size="medium">
           <Form>
             <Header>
-              <Title>Tabi</Title>
+              <Image src={textureURL} size="thumb" /><Title>Tabi</Title>
             </Header>
             <FormFields>
               <FormField htmlFor="activated">

@@ -20,5 +20,6 @@
         "scripts": [
             "background-bundle.js"
         ]
-    }
+    },
+    "web_accessible_resources": ["icons/*.png"]
 }
