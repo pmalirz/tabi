@@ -51,6 +51,7 @@ class ConfigBox extends Component {
     this.setState(_.merge(this.state, newState));
   }
 
+  /** Saves the current state and brodcast the changes to inform the background script about amendments. */
   applyChanges = (event) => {
     // validate config
     
@@ -82,6 +83,7 @@ class ConfigBox extends Component {
     return configModel;
   }
 
+  /** Notifies the background script about changes made in the configuration. */
   broadcastConfig = (configModel) => {
     browser.runtime.sendMessage(
       { type: "tabi-config-changed", config: configModel.toJSON() }
@@ -121,6 +123,7 @@ class ConfigBox extends Component {
   componentDidMount() {
     this.loadConfig();
   }
+
 
 }
 

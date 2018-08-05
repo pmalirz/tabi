@@ -70,12 +70,13 @@
         currentlySwitchingTimeout = setTimeout(switchTabs, nextTimeout);
     }
 
+    /** Make the tab switch. */
     function switchTabs() {
         if (!enabled) {
             return; // just stop that madness... quit form the loop
         }
 
-        var allTabsPromise = browser.tabs.query({ currentWindow: true });
+        let allTabsPromise = browser.tabs.query({ currentWindow: true });
 
         allTabsPromise.then(function (allTabs) {
             activateTab(allTabs);
@@ -83,12 +84,14 @@
 
     }
 
+    /** Removes js timer which switches tabs. */
     function clearSwitchingTimeout() {
         if(currentlySwitchingTimeout) {
             clearTimeout(currentlySwitchingTimeout);
         }
     }
 
+    /** Enables tab switchin with a new configuration. */
     function enableTabi(_configArray) {
         clearSwitchingTimeout();
 
@@ -110,6 +113,7 @@
 
     // Browser Listeners ------------------------------------------
 
+    /** Here is the listener which get the message when the configuration changes. */
     browser.runtime.onMessage.addListener((message) => {
 
         console.log('background onMessage: ' + message);

@@ -1,9 +1,9 @@
 import _ from 'lodash';
 
 class ConfigModel {
-    constructor(activated = false, tabConfig = []) {
+    constructor(activated = false, tabConfigs = []) {
         this.activated = activated;
-        this.tabConfig = tabConfig;
+        this.tabConfig = tabConfigs;
     }
 
     addTabConfig = (tabConfig) => {
@@ -46,6 +46,7 @@ class TabConfig {
         return new TabConfig(json['timeout'], json['reload']);
     }
 
+    /** Deserializes a text to an array of TabConfig objects. */
     static fromString(text) {
 
         // when r or 1 is set then returns true, otherwise return false.
@@ -67,6 +68,7 @@ class TabConfig {
         return configArray;
     }
 
+    /** Serializes an array of TabConfig objects to a text which can be used as a value of HTML inputs (e.g. Text Area). */
     static toString(tabConfigArray) {
         if(!_.isArray(tabConfigArray)) {
             return "";
