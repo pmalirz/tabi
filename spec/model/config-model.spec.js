@@ -23,7 +23,7 @@ describe("ConfigModel suite", function() {
     });
 
     it("ConfigModel - fromText", function() {
-      let tabiConfigArray = TabConfig.fromText("2000,x\n1000,r\n8000");
+      let tabiConfigArray = TabConfig.fromString("2000,x\n1000,r\n8000");
 
       expect(tabiConfigArray.length).toBe(3);
       expect(tabiConfigArray[0].timeout).toBe(2000);
