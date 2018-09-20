@@ -97,6 +97,7 @@ class ConfigBox extends Component {
     this.infoOnActivation = false;
 
     const textureURL = browser.extension.getURL("icons/tabi48.png");
+    const tabConfigError = this.state.tabConfig != "" && !TabConfig.isValidString(this.state.tabConfig) ? "Invalid configuration" : "";
 
     return (
       <Box direction="row" justify="center">
@@ -109,7 +110,7 @@ class ConfigBox extends Component {
               <FormField htmlFor="activated">
                 <CheckBox name="activated" label="Activate Tabi" checked={this.state.activated} onChange={this.activatedHandler} />
               </FormField>
-              <FormField>
+              <FormField error={tabConfigError}>
                 <textarea rows="5" type="text" name="config" placeholder="2000,r" value={this.state.tabConfig} onChange={this.tabConfigHandler} />
               </FormField>
             </FormFields>

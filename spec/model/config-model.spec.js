@@ -34,4 +34,14 @@ describe("ConfigModel suite", function() {
       expect(tabiConfigArray[2].reload).toBe(false);
    });
 
+   it("ConfigModel - isValidString", function() {
+      expect(TabConfig.isValidString("2000")).toBeTruthy();
+      expect(TabConfig.isValidString("2000   ")).toBeTruthy();
+      expect(TabConfig.isValidString("2000,r   ")).toBeTruthy();
+      expect(TabConfig.isValidString("2000,R   ")).toBeTruthy();
+
+      expect(TabConfig.isValidString("2000,r\r\n1   ")).toBeTruthy();
+
+   });
+
   });

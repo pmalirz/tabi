@@ -46,6 +46,18 @@ class TabConfig {
         return new TabConfig(json['timeout'], json['reload']);
     }
 
+    static isValidString(text) {
+        let lines = text.trim().split("\n");
+
+        for(let line of lines) {
+            if(!(/^[0-9]+(,r)?$/i).test(line.trim())){
+                return false;    
+            }
+        };
+        
+        return true;
+    }
+
     /** Deserializes a text to an array of TabConfig objects. */
     static fromString(text) {
 
