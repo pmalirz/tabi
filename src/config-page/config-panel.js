@@ -111,7 +111,7 @@ class ConfigBox extends Component {
                 <CheckBox name="activated" label="Activate Tabi" checked={this.state.activated} onChange={this.activatedHandler} />
               </FormField>
               <FormField error={tabConfigError}>
-                <textarea rows="5" type="text" name="config" placeholder="2000,r" value={this.state.tabConfig} onChange={this.tabConfigHandler} />
+                <textarea rows="5" type="text" name="config" placeholder="2,r" value={this.state.tabConfig} onChange={this.tabConfigHandler} />
               </FormField>
             </FormFields>
           </Form>

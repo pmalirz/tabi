@@ -54,7 +54,7 @@
 
         let configIdx = getConfigForTabIndex(currentTabIdx);
         // read the next timeout
-        let nextTimeout = configArray[configIdx].timeout;
+        let nextTimeout = configArray[configIdx].timeout * 1000;
         
         console.log("Next timeout: " + nextTimeout + ", Current tab index: " + currentTabIdx);
 
