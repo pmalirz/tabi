@@ -53,9 +53,6 @@ class ConfigBox extends Component {
 
   /** Saves the current state and brodcast the changes to inform the background script about amendments. */
   applyChanges = (event) => {
-    // validate config
-    
-
     // save config
     let savedConfigModel = this.saveConfig(); 
 
