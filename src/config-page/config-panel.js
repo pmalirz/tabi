@@ -3,15 +3,16 @@ import React, { Component } from 'react';
 import { configRepository } from '../model/config-repository';
 import { ConfigModel, TabConfig } from '../model/config-model';
 
-import Form from 'grommet/components/Form';
-import FormFields from 'grommet/components/FormFields';
-import FormField from 'grommet/components/FormField';
-import CheckBox from 'grommet/components/CheckBox';
-import Header from 'grommet/components/Header';
-import Box from 'grommet/components/Box';
-import Title from 'grommet/components/Title';
-import Toast from 'grommet/components/Toast';
-import Image from 'grommet/components/Image';
+import {
+  Box,
+  Form,
+  FormField,
+  CheckBox,
+  Header,
+  Heading,
+  Image,
+  TextArea
+} from 'grommet';
 
 class ConfigPanel extends Component {
   render() {
@@ -89,7 +90,7 @@ class ConfigBox extends Component {
 
   render() {
 
-    const activatedToast = this.infoOnActivation ? <Toast status="ok">Tabi is active now!</Toast> : '';
+    //const activatedToast = this.infoOnActivation ? <Toast status="ok">Tabi is active now!</Toast> : '';
 
     this.infoOnActivation = false;
 
@@ -101,19 +102,16 @@ class ConfigBox extends Component {
         <Box id="register-box" colorIndex="light-2" pad="medium" primary={true} size="medium">
           <Form>
             <Header>
-              <Image src={textureURL} size="thumb" /><Title>Tabi</Title>
+              <Image src={textureURL} size="thumb" /><Heading>Tabi</Heading>
             </Header>
-            <FormFields>
               <FormField htmlFor="activated">
                 <CheckBox name="activated" label="Activate Tabi" checked={this.state.activated} onChange={this.activatedHandler} />
               </FormField>
               <FormField error={tabConfigError}>
-                <textarea rows="5" type="text" name="config" placeholder="2,r" value={this.state.tabConfig} onChange={this.tabConfigHandler} />
+                <TextArea name="config" placeholder="2,r" value={this.state.tabConfig} onChange={this.tabConfigHandler} />
               </FormField>
-            </FormFields>
           </Form>
-        </Box>
-        {activatedToast}        
+        </Box>   
       </Box>
     );
   }

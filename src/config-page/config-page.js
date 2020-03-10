@@ -1,8 +1,5 @@
-import 'babel-polyfill';
 import { ConfigPanel } from './config-panel';
-import App from 'grommet/components/App';
-
-import 'grommet/scss/hpinc/index.scss';
+import { Grommet } from 'grommet';
 
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -10,7 +7,26 @@ import ReactDOM from 'react-dom';
 // main application element
 const app = document.getElementById('app');
 
+const theme = {
+  global: {
+    colors: {
+      brand: '#228BE6',
+    },
+    font: {
+      family: 'Roboto',
+      size: '14px',
+      height: '20px',
+    },
+  },
+};
+
+const App = props => (
+    <Grommet theme={theme}>
+      <ConfigPanel />
+    </Grommet>
+  );
+
 ReactDOM.render(
-    <App><ConfigPanel /></App>,
+    <App />,
     app
 );
