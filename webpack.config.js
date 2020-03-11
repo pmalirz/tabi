@@ -8,15 +8,11 @@ module.exports = {
     "config-page": './src/config-page/config-page.js',
     "background": './src/background/background.js',
   },
-  mode: 'development',
+  mode: 'production',
   devtool: 'inline-source-map',
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: '[name]-bundle.js'
-  },
-  optimization: {
-    // We no not want to minimize our code.
-    minimize: false
   },
   plugins: [
     new CleanWebpackPlugin(),
