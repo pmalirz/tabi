@@ -27,8 +27,6 @@ class ConfigBox extends Component {
   constructor(props) {
     super(props);
 
-    this.infoOnActivation = false;
-
     this.state = { activated: false, tabConfig: '' };
   }
 
@@ -39,7 +37,7 @@ class ConfigBox extends Component {
 
     if(activated) {
       // TODO: validate befor enable the component...
-      this.infoOnActivation = true;
+
     }
 
     let newState = { activated: activated };
@@ -89,10 +87,6 @@ class ConfigBox extends Component {
   }
 
   render() {
-
-    //const activatedToast = this.infoOnActivation ? <Toast status="ok">Tabi is active now!</Toast> : '';
-
-    this.infoOnActivation = false;
 
     const textureURL = browser.extension.getURL("icons/tabi48.png");
     const tabConfigError = this.state.tabConfig != "" && !TabConfig.isValidString(this.state.tabConfig) ? "Invalid configuration" : "";
