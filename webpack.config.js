@@ -1,31 +1,28 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const CleanWebpackPlugin = require('clean-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin')
-//const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 
 module.exports = {
   entry: {
     "config-page": './src/config-page/config-page.js',
     "background": './src/background/background.js',
-  }, 
+  },
+  mode: 'production',
+  devtool: 'inline-source-map',
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: '[name]-bundle.js'
   },
-  optimization: {
-		// We no not want to minimize our code.
-		minimize: false
-	},
-  plugins: [    
-    new CleanWebpackPlugin(['dist']),
-    new CopyWebpackPlugin([{from: 'assets/manifest.json', flatten: true }, {from: 'assets/icons/*', to: 'icons', flatten: true }]),
-    new HtmlWebpackPlugin({  
+  plugins: [
+    new CleanWebpackPlugin(),
+    new CopyWebpackPlugin([{ from: 'assets/manifest.json', flatten: true }, { from: 'assets/icons/*', to: 'icons', flatten: true }]),
+    new HtmlWebpackPlugin({
       filename: 'config-page.html',
       template: 'src/config-page/config-page.html',
       chunks: ["config-page"]
     })
-    
+
   ],
   module: {
     rules: [
@@ -33,10 +30,7 @@ module.exports = {
         test: /\.jsx?$/,
         exclude: /node_modules/,
         use: {
-          loader: 'babel-loader',
-          options: {
-            presets: ['es2015', 'stage-0', 'react']   
-          }   
+          loader: 'babel-loader'
         }
       },
       {

@@ -3,15 +3,15 @@ import React, { Component } from 'react';
 import { configRepository } from '../model/config-repository';
 import { ConfigModel, TabConfig } from '../model/config-model';
 
-import Form from 'grommet/components/Form';
-import FormFields from 'grommet/components/FormFields';
-import FormField from 'grommet/components/FormField';
-import CheckBox from 'grommet/components/CheckBox';
-import Header from 'grommet/components/Header';
-import Box from 'grommet/components/Box';
-import Title from 'grommet/components/Title';
-import Toast from 'grommet/components/Toast';
-import Image from 'grommet/components/Image';
+import {
+  Box,
+  FormField,
+  CheckBox,
+  Header,
+  Heading,
+  Image,
+  TextArea
+} from 'grommet';
 
 class ConfigPanel extends Component {
   render() {
@@ -26,8 +26,6 @@ class ConfigBox extends Component {
   constructor(props) {
     super(props);
 
-    this.infoOnActivation = false;
-
     this.state = { activated: false, tabConfig: '' };
   }
 
@@ -35,11 +33,6 @@ class ConfigBox extends Component {
     console.log('activatedHandler: ' + event.target.checked);
 
     let activated = event.target.checked;
-
-    if(activated) {
-      // TODO: validate befor enable the component...
-      this.infoOnActivation = true;
-    }
 
     let newState = { activated: activated };
     this.setState(_.merge(this.state, newState), () => this.applyChanges());
@@ -54,7 +47,7 @@ class ConfigBox extends Component {
   /** Saves the current state and brodcast the changes to inform the background script about amendments. */
   applyChanges = (event) => {
     // save config
-    let savedConfigModel = this.saveConfig(); 
+    let savedConfigModel = this.saveConfig();
 
     // broadcast changes
     this.broadcastConfig(savedConfigModel);
@@ -63,7 +56,7 @@ class ConfigBox extends Component {
   /** Loads the Tabi config (state) on the config popup. */
   loadConfig = () => {
     configRepository.loadOrDefault((loadedConfig) => {
-      this.setState({activated: loadedConfig.activated, tabConfig: TabConfig.toString(loadedConfig.tabConfig) });
+      this.setState({ activated: loadedConfig.activated, tabConfig: TabConfig.toString(loadedConfig.tabConfig) });
 
       console.log('Loaded config: ' + JSON.stringify(this.state));
     });
@@ -84,14 +77,12 @@ class ConfigBox extends Component {
   broadcastConfig = (configModel) => {
     browser.runtime.sendMessage(
       { type: "tabi-config-changed", config: configModel.toJSON() }
-    );    
+    );
   }
 
   render() {
 
-    const activatedToast = this.infoOnActivation ? <Toast status="ok">Tabi is active now!</Toast> : '';
-
-    this.infoOnActivation = false;
+    console.log('render: ' + this.state.tabConfig + ', ' + this.state.activated);
 
     const textureURL = browser.extension.getURL("icons/tabi48.png");
     const tabConfigError = this.state.tabConfig != "" && !TabConfig.isValidString(this.state.tabConfig) ? "Invalid configuration" : "";
@@ -99,26 +90,22 @@ class ConfigBox extends Component {
     return (
       <Box direction="row" justify="center">
         <Box id="register-box" colorIndex="light-2" pad="medium" primary={true} size="medium">
-          <Form>
-            <Header>
-              <Image src={textureURL} size="thumb" /><Title>Tabi</Title>
-            </Header>
-            <FormFields>
-              <FormField htmlFor="activated">
-                <CheckBox name="activated" label="Activate Tabi" checked={this.state.activated} onChange={this.activatedHandler} />
-              </FormField>
-              <FormField error={tabConfigError}>
-                <textarea rows="5" type="text" name="config" placeholder="2,r" value={this.state.tabConfig} onChange={this.tabConfigHandler} />
-              </FormField>
-            </FormFields>
-          </Form>
+          <Header>
+            <Image src={textureURL} size="thumb" /><Heading>Tabi</Heading>
+          </Header>
+          <FormField htmlFor="activated">
+            <CheckBox name="activated" label="Activate Tabi" checked={this.state.activated} onChange={this.activatedHandler} />
+          </FormField>
+          <FormField error={tabConfigError}>
+            <TextArea name="config" placeholder="2,r" value={this.state.tabConfig} onChange={this.tabConfigHandler} />
+          </FormField>
         </Box>
-        {activatedToast}        
       </Box>
     );
   }
 
   componentDidMount() {
+    console.log('componentDidMount');
     this.loadConfig();
   }
 
