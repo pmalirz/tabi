@@ -7,7 +7,9 @@
     "test": "babel-node spec/run.js",
     "build:dev": "webpack --mode=development",
     "build:prod": "webpack --mode=production --optimize-minimize",
-    "run": "web-ext run --source-dir=./dist --verbose"
+    "run": "web-ext run --source-dir=./dist --verbose",
+    "snyk-protect": "snyk protect",
+    "prepare": "npm run snyk-protect"
   },
   "keywords": [],
   "author": "Przemyslaw Malirz",
@@ -55,6 +57,8 @@
     "npm": "^6.14.2",
     "react": "^16.13.0",
     "react-dom": "^16.13.0",
-    "styled-components": "^5.0.1"
-  }
+    "styled-components": "^5.0.1",
+    "snyk": "^1.316.1"
+  },
+  "snyk": true
 }
