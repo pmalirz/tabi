@@ -52,7 +52,7 @@
     "grommet": "^2.11.1",
     "immutable": "^4.0.0-rc.12",
     "lodash": "^4.17.15",
-    "npm": "^6.14.2",
+    "npm": "^6.14.6",
     "react": "^16.13.0",
     "react-dom": "^16.13.0",
     "styled-components": "^5.0.1"
